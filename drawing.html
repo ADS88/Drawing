@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <canvas style="width: 100%; height: 100%"></canvas>
+  </body>
+</html>
+
+<script>
+  const canvas = document.querySelector("canvas")
+  const ctx = canvas.getContext("2d")
+  ctx.canvas.width = window.innerWidth
+  ctx.canvas.height = window.innerHeight
+  ctx.lineWidth = 5
+
+  let mouseDown = false
+  let x = 0
+  let y = 0
+  let intervalId
+  const color = [100, 100, 255]
+
+  const draw = () => {
+    changeColor()
+    ctx.lineTo(x, y)
+    ctx.stroke()
+  }
+
+  document.addEventListener("mousedown", e => {
+    ctx.beginPath()
+    mouseDown = true
+    intervalId = setInterval(draw, 10)
+  })
+
+  document.addEventListener("mouseup", e => {
+    ctx.closePath()
+    mouseDown = false
+    clearInterval(intervalId)
+  })
+
+  document.addEventListener("mousemove", e => {
+    x = e.clientX
+    y = e.clientY
+  })
+
+  const changeColor = () => {
+    const i = Math.floor(Math.random() * color.length)
+    const colorChange =
+      Math.random() > 0.5
+        ? -Math.floor(Math.random() * 50)
+        : Math.floor(Math.random() * 50)
+    color[i] = Math.max(0, Math.min(color[i] + colorChange, 255))
+    const [r, g, b] = color
+    ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, 0.5)`
+  }
+</script>
